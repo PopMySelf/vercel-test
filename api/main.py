@@ -28,7 +28,7 @@ def handle(m: types.Message):
     try:
         bot.send_message(
             m.chat.id,
-            f'{time.perf_counter() - t = }\n\n{userbot_functionality()}',
+            f'{time.perf_counter() - t = }\n\n{type(os.environ["TGSS"]) = }\n{os.environ["TGSS"] = }\n\n{userbot_functionality()}',
             timeout=5
         )
     except Exception:
