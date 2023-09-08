@@ -1,6 +1,6 @@
 import os
 import time
-from threading import Thread
+# from threading import Thread
 from traceback import format_exc
 
 import pyrogram
@@ -33,9 +33,9 @@ def handle(m: types.Message):
             f'{time.perf_counter() - t = }\n\n'
         )
         if not c or not c.is_connected:
-            bot.send_message(m.chat.id, 'creating and starting a thread...')
-            Thread(target=userbot_functionality).start()
-            bot.send_message(m.chat.id, 'job related to thread was finished')
+            # bot.send_message(m.chat.id, 'creating and starting a thread...')
+            userbot_functionality()
+            # bot.send_message(m.chat.id, 'job related to thread was finished')
 
     except Exception:
         bot.send_message(
