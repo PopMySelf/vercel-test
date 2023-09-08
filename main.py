@@ -15,7 +15,6 @@ def me():
 
 @app.post('/')
 def handle_telegram():
-    bot.send_message(652015662, os.environ['VERCEL_ENV'])
     if request.content_type == 'application/json' and (
             update := types.Update.de_json(request.stream.read().decode('utf-8'))
     ).message and update.message.from_user.id in [652015662]:
@@ -27,6 +26,6 @@ def handle_telegram():
 
 @bot.message_handler(commands=['tv'])
 def handle_tv(m: types.Message):
-    bot.send_message(m.chat.id, 'This is me')
+    bot.send_message(m.chat.id, f'{os.environ["VERCEL_ENV"]}')
 
 
