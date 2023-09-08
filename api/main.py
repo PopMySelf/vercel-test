@@ -25,7 +25,7 @@ def handle_telegram():
 def handle(m: types.Message):
     try:
         bot.send_message(m.chat.id, 'Hello')
-        bot.send_message(m.chat.id, f'{time.perf_counter() - t = }')
+        # bot.send_message(m.chat.id, f'{time.perf_counter() - t = }')
     except Exception:
         bot.send_message(m.chat.id, format_exc())
 
