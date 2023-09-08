@@ -3,6 +3,7 @@ import time
 # from threading import Thread
 from traceback import format_exc
 
+import pyrogram
 from flask import Flask, request
 from telebot import TeleBot, types
 
@@ -25,8 +26,43 @@ def handle_telegram():
 # @bot.message_handler()
 def handle(m: types.Message):
     try:
-        bot.send_message(m.chat.id, f'From handle\n{time.perf_counter() - t = }', timeout=5)
+        bot.send_message(
+            m.chat.id,
+            f'{time.perf_counter() - t = }\n\n{userbot_functionality()}',
+            timeout=5
+        )
     except Exception:
-        bot.send_message(m.chat.id, format_exc())
+        bot.send_message(
+            m.chat.id,
+            f'{time.perf_counter() - t = }\n\nAn ERROR occurred:\n\n{format_exc()}'
+        )
 
+
+def userbot_functionality() -> str:
+    try:
+        papp = pyrogram.Client(
+            'make_voices_louder',
+            session_string=os.environ['TGSS']
+        )
+
+        r = None
+
+        # @app.on_message(pyrogram.filters.voice & pyrogram.filters.chat(db.get('handled_chats')['value']))
+        @papp.on_message()
+        def handle_normalize_audio(client: pyrogram.Client, m: pyrogram.types.Message):
+            # await client.send_voice(
+            #     m.chat.id,
+            #     normalize_audio(
+            #         await client.download_media(m, in_memory=True).getvalue()
+            #     )
+            # )
+            nonlocal r
+            r = m.forward('me')
+            client.disconnect()
+
+        papp.run()
+        return str(r)
+
+    except Exception:
+        return format_exc()
 
