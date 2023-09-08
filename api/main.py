@@ -11,6 +11,8 @@ t = time.perf_counter()
 app = Flask(__name__)
 bot = TeleBot(os.environ['TELEGRAM_BOT_TOKEN'])
 
+c = None
+
 
 @app.post('/')
 def handle_telegram():
@@ -28,7 +30,8 @@ def handle(m: types.Message):
     try:
         bot.send_message(
             m.chat.id,
-            f'{time.perf_counter() - t = }\n\n{type(os.environ["TGSS"]) = }\n{os.environ["TGSS"] = }\n\n{userbot_functionality()}',
+            f'{time.perf_counter() - t = }\n\n'
+            f'{userbot_functionality() = }' if not c or not c.is_connected else 'Already connected',
             timeout=5
         )
     except Exception:
@@ -39,8 +42,10 @@ def handle(m: types.Message):
 
 
 def userbot_functionality() -> str:
+    global c
+
     try:
-        papp = pyrogram.Client(
+        c = pyrogram.Client(
             'make_voices_louder',
             session_string=os.environ['TGSS']
         )
@@ -48,8 +53,8 @@ def userbot_functionality() -> str:
         r = None
 
         # @app.on_message(pyrogram.filters.voice & pyrogram.filters.chat())
-        @papp.on_message()
-        def handle_normalize_audio(client: pyrogram.Client, m: pyrogram.types.Message):
+        @c.on_message()
+        async def handle_normalize_audio(client: pyrogram.Client, m: pyrogram.types.Message):
             # await client.send_voice(
             #     m.chat.id,
             #     normalize_audio(
@@ -58,9 +63,9 @@ def userbot_functionality() -> str:
             # )
             nonlocal r
             r = m.forward('me')
-            client.disconnect()
+            await client.disconnect()
 
-        papp.run()
+        c.run()
         return str(r)
 
     except Exception:
