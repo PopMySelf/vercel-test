@@ -9,11 +9,6 @@ app = Flask(__name__)
 bot = TeleBot(os.environ['TELEGRAM_BOT_TOKEN'])
 
 
-@app.get('/')
-def me():
-    return 'this is me'
-
-
 @app.post('/')
 def handle_telegram():
     if request.content_type == 'application/json' and (
