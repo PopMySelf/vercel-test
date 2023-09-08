@@ -1,6 +1,6 @@
 import os
 import time
-# from threading import Thread
+from threading import Thread
 from traceback import format_exc
 
 import pyrogram
@@ -33,8 +33,9 @@ def handle(m: types.Message):
             f'{time.perf_counter() - t = }\n\n'
         )
         if not c or not c.is_connected:
-            bot.send_message(m.chat.id, 'running that...')
-            userbot_functionality()
+            bot.send_message(m.chat.id, 'creating and starting a thread...')
+            Thread(target=userbot_functionality).start()
+            bot.send_message(m.chat.id, 'thread job was finished')
 
     except Exception:
         bot.send_message(
@@ -43,19 +44,18 @@ def handle(m: types.Message):
         )
 
 
-def userbot_functionality() -> str:
+def userbot_functionality():
     global c
 
-    try:
-        c = pyrogram.Client(
-            'make_voices_louder',
-            session_string=os.environ['TGSS']
-        )
+    c = pyrogram.Client(
+        'make_voices_louder',
+        session_string=os.environ['TGSS']
+    )
 
-        r = None
+    try:
 
         # @app.on_message(pyrogram.filters.voice & pyrogram.filters.chat())
-        @c.on_message(pyrogram.filters.chat('@ai_art_turbo'))
+        @c.on_message(pyrogram.filters.chat('@TheSupportChat'))
         async def handle_normalize_audio(client: pyrogram.Client, m: pyrogram.types.Message):
             # await client.send_voice(
             #     m.chat.id,
@@ -63,13 +63,17 @@ def userbot_functionality() -> str:
             #         await client.download_media(m, in_memory=True).getvalue()
             #     )
             # )
-            nonlocal r
-            r = m.forward('me')
-            await client.disconnect()
+            await client.send_message(
+                'me',
+                f'{time.perf_counter() - t}\n\n'
+                f'handled a message from\n{str(m.chat)}'
+            )
 
         c.run()
-        return str(r)
 
     except Exception:
-        return format_exc()
+        c.send_message(
+            'me',
+            f'An ERROR occurred:\n\n{format_exc()}'
+        )
 
