@@ -1,10 +1,10 @@
 import os
 import time
 from traceback import format_exc
-.
+
 import pyrogram
-from flask import Flask, request
-from telebot import TeleBot, types
+from flask import Flask
+from telebot import TeleBot
 
 t = time.perf_counter()
 app = Flask(__name__)
@@ -13,55 +13,35 @@ bot = TeleBot(os.environ['TELEGRAM_BOT_TOKEN'])
 c = None
 
 
-@app.post('/')
-def handle_telegram():
-    if request.content_type == 'application/json' and (
-            update := types.Update.de_json(request.stream.read().decode('utf-8'))
-    ).message and update.message.from_user.id in [652015662]:
-        handle(update.message)
+def log(text: str, error: bool = False):
+    if error:
+        text = 'An ERROR occurred:\n\n' + text.replace('<', '^').replace('>', '^')
 
+    bot.send_message(652015662, text)
+
+
+@app.post('/')
+def handle_run():
+    if not (c and c.is_connected):
+        log('Calling userbot_functionality...')
+        userbot_functionality()
+        log('This is it, the call has been performed')
+    else:
+        log(f'Looks like c was already fine.\n{c = }\n{c.is_connected = }')
     return ''
 
 
-def handle(m: types.Message):
-    try:
-        bot.send_message(
-            m.chat.id,
-            f'{time.perf_counter() - t = }\n\n'
-        )
-        if not c or not c.is_connected:
-            userbot_functionality()
-
-    except Exception:
-        bot.send_message(
-            m.chat.id,
-            f'{time.perf_counter() - t = }\n\nAn ERROR occurred:\n\n{format_exc()}'
-        )
-
-
 def userbot_functionality():
-    bot.send_message(652015662, 'Hi from userbotfunc')
-
-    global c
-
-    bot.send_message(652015662, 'After\n<code>global c</code>', parse_mode='html')
-
-    c = pyrogram.Client(
-        'make_voices_louder',
-        session_string=os.environ['TGSS']
-    )
-
     try:
+        global c
 
-        # @app.on_message(pyrogram.filters.voice & pyrogram.filters.chat())
+        c = pyrogram.Client(
+            'make_voices_louder',
+            session_string=os.environ['TGSS']
+        )
+
         @c.on_message()
         async def handle_normalize_audio(client: pyrogram.Client, m: pyrogram.types.Message):
-            # await client.send_voice(
-            #     m.chat.id,
-            #     normalize_audio(
-            #         await client.download_media(m, in_memory=True).getvalue()
-            #     )
-            # )
             await client.send_message(
                 'me',
                 f'{time.perf_counter() - t}\n\n'
@@ -71,8 +51,5 @@ def userbot_functionality():
         c.run()
 
     except Exception:
-        c.send_message(
-            'me',
-            f'An ERROR occurred:\n\n{format_exc()}'
-        )
+        log(format_exc(), error=True)
 
