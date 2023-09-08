@@ -7,6 +7,8 @@ from telebot import TeleBot, types
 app = Flask(__name__)
 bot = TeleBot(os.environ['TELEGRAM_BOT_TOKEN'])
 
+bot.send_message(652015662, os.environ['VERCEL_ENV'])
+
 
 @app.route('/', methods=['POST'])
 def handle_telegram():
