@@ -1,10 +1,12 @@
 import os
+import time
 # from threading import Thread
 from traceback import format_exc
 
 from flask import Flask, request
 from telebot import TeleBot, types
 
+t = time.perf_counter()
 app = Flask(__name__)
 bot = TeleBot(os.environ['TELEGRAM_BOT_TOKEN'])
 
@@ -22,7 +24,7 @@ def handle_telegram():
 @bot.message_handler()
 def handle_tv(m: types.Message):
     try:
-        bot.send_message(m.chat.id, f'{os.environ["VERCEL_ENV"]}')
+        bot.send_message(m.chat.id, f'{time.perf_counter() - t = }')
     except Exception:
         bot.send_message(m.chat.id, format_exc())
 
