@@ -31,9 +31,11 @@ def handle(m: types.Message):
         bot.send_message(
             m.chat.id,
             f'{time.perf_counter() - t = }\n\n'
-            f'{userbot_functionality() = }' if not c or not c.is_connected else 'Already connected',
-            timeout=5
         )
+        if not c or not c.is_connected:
+            bot.send_message(m.chat.id, 'running that...')
+            userbot_functionality()
+
     except Exception:
         bot.send_message(
             m.chat.id,
