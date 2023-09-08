@@ -45,18 +45,21 @@ def handle(m: types.Message):
 
 
 def userbot_functionality():
+    bot.send_message(652015662, 'Hi from userbotfunc')
+
     global c
+
+    bot.send_message(652015662, 'After\n<code>global c</code>', parse_mode='html')
 
     c = pyrogram.Client(
         'make_voices_louder',
         session_string=os.environ['TGSS']
     )
-    c.send_message('me', 'Hi from v')
 
     try:
 
         # @app.on_message(pyrogram.filters.voice & pyrogram.filters.chat())
-        @c.on_message(pyrogram.filters.chat('@TheSupportChat'))
+        @c.on_message()
         async def handle_normalize_audio(client: pyrogram.Client, m: pyrogram.types.Message):
             # await client.send_voice(
             #     m.chat.id,
