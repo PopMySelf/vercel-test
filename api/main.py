@@ -47,7 +47,7 @@ def userbot_functionality() -> str:
 
         r = None
 
-        # @app.on_message(pyrogram.filters.voice & pyrogram.filters.chat(db.get('handled_chats')['value']))
+        # @app.on_message(pyrogram.filters.voice & pyrogram.filters.chat())
         @papp.on_message()
         def handle_normalize_audio(client: pyrogram.Client, m: pyrogram.types.Message):
             # await client.send_voice(
