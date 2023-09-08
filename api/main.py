@@ -16,6 +16,11 @@ def handle_telegram():
     if request.content_type == 'application/json' and (
             update := types.Update.de_json(request.stream.read().decode('utf-8'))
     ).message and update.message.from_user.id in [652015662]:
+        bot.send_message(
+            652015662,
+            f'{type(update.message.from_user.id)}\n{time.perf_counter() - t = }',
+            timeout=5
+        )
         bot.process_new_updates([update])
 
     return ''
