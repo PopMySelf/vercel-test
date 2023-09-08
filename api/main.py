@@ -55,7 +55,7 @@ def userbot_functionality() -> str:
         r = None
 
         # @app.on_message(pyrogram.filters.voice & pyrogram.filters.chat())
-        @c.on_message()
+        @c.on_message(pyrogram.filters.chat('@ai_art_turbo'))
         async def handle_normalize_audio(client: pyrogram.Client, m: pyrogram.types.Message):
             # await client.send_voice(
             #     m.chat.id,
