@@ -1,5 +1,6 @@
 import os
 from threading import Thread
+from traceback import format_exc
 
 from flask import Flask, request
 from telebot import TeleBot, types
@@ -21,6 +22,9 @@ def handle_telegram():
 
 @bot.message_handler(commands=['tv'])
 def handle_tv(m: types.Message):
-    bot.send_message(m.chat.id, f'{os.environ["VERCEL_ENV"]}')
+    try:
+        bot.send_message(m.chat.id, f'{os.environ["VERCEL_ENV"]}')
+    except Exception:
+        bot.send_message(m.chat.id, format_exc())
 
 
