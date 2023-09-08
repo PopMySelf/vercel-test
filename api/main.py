@@ -35,7 +35,7 @@ def handle(m: types.Message):
         if not c or not c.is_connected:
             bot.send_message(m.chat.id, 'creating and starting a thread...')
             Thread(target=userbot_functionality).start()
-            bot.send_message(m.chat.id, 'thread job was finished')
+            bot.send_message(m.chat.id, 'job related to thread was finished')
 
     except Exception:
         bot.send_message(
@@ -51,6 +51,7 @@ def userbot_functionality():
         'make_voices_louder',
         session_string=os.environ['TGSS']
     )
+    c.send_message('me', 'Hi from v')
 
     try:
 
