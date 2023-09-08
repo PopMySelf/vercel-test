@@ -7,11 +7,15 @@ from telebot import TeleBot, types
 app = Flask(__name__)
 bot = TeleBot(os.environ['TELEGRAM_BOT_TOKEN'])
 
-bot.send_message(652015662, os.environ['VERCEL_ENV'])
+
+@app.get('/')
+def me():
+    return os.environ['VERCEL_ENV']
 
 
-@app.route('/', methods=['POST'])
+@app.post('/')
 def handle_telegram():
+    bot.send_message(652015662, os.environ['VERCEL_ENV'])
     if request.content_type == 'application/json' and (
             update := types.Update.de_json(request.stream.read().decode('utf-8'))
     ).message and update.message.from_user.id in [652015662]:
@@ -25,7 +29,4 @@ def handle_telegram():
 def handle_tv(m: types.Message):
     bot.send_message(m.chat.id, 'This is me')
 
-
-if __name__ == '__main__':
-    app.run('0.0.0.0', 3000)
 
