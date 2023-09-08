@@ -1,8 +1,7 @@
 import os
 import time
-# from threading import Thread
 from traceback import format_exc
-
+.
 import pyrogram
 from flask import Flask, request
 from telebot import TeleBot, types
@@ -20,12 +19,10 @@ def handle_telegram():
             update := types.Update.de_json(request.stream.read().decode('utf-8'))
     ).message and update.message.from_user.id in [652015662]:
         handle(update.message)
-        # bot.process_new_updates([update])
 
     return ''
 
 
-# @bot.message_handler()
 def handle(m: types.Message):
     try:
         bot.send_message(
@@ -33,9 +30,7 @@ def handle(m: types.Message):
             f'{time.perf_counter() - t = }\n\n'
         )
         if not c or not c.is_connected:
-            # bot.send_message(m.chat.id, 'creating and starting a thread...')
             userbot_functionality()
-            # bot.send_message(m.chat.id, 'job related to thread was finished')
 
     except Exception:
         bot.send_message(
